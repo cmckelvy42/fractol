@@ -6,7 +6,7 @@
 /*   By: cmckelvy <cmckelvy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/05 21:32:07 by cmckelvy          #+#    #+#             */
-/*   Updated: 2019/07/05 22:15:54 by cmckelvy         ###   ########.fr       */
+/*   Updated: 2019/07/05 22:29:03 by cmckelvy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,10 @@ int		main(int argc, char **argv)
 		return (-1);
 	if (argc == 2)
 	{
-		mlx_win_init(mlx);
-		fract->mlx = mlx;
 		if (!fract_compare(argv, fract))
 			return (0);
+		mlx_win_init(mlx);
+		fract->mlx = mlx;
 		fract_init(fract);
 		mlx_hook(mlx->window, 6, 0, mouse_julia, fract);
 		mlx_mouse_hook(mlx->window, mouse_hook, fract);
