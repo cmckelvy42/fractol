@@ -1,40 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mandelbrot.c                                       :+:      :+:    :+:   */
+/*   tricorn.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cmckelvy <cmckelvy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/05 21:31:50 by cmckelvy          #+#    #+#             */
-/*   Updated: 2019/07/05 22:06:23 by cmckelvy         ###   ########.fr       */
+/*   Created: 2019/07/05 21:31:39 by cmckelvy          #+#    #+#             */
+/*   Updated: 2019/07/05 22:06:11 by cmckelvy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-void		mandelbrot_init(t_fractol *fract)
+void		tricorn_init(t_fractol *fract)
 {
 	fract->it_max = 50;
-	fract->zoom = 200;
-	fract->x1 = -2.25f;
-	fract->y1 = -1.5f;
+	fract->zoom = 150;
+	fract->x1 = -2.0f;
+	fract->y1 = -2.0f;
 	fract->color = 42424242;
 }
 
-static void	mandelbrot_calc(t_fractol *fract)
+static void	tricorn_calc(t_fractol *fract)
 {
 	fract->c.r = fract->x / fract->zoom + fract->x1;
 	fract->c.i = fract->y / fract->zoom + fract->y1;
-	fract->z.r = 0;
-	fract->z.i = 0;
+	fract->z.r = fract->c.r;
+	fract->z.i = fract->c.i;
 	fract->it = 0;
 	while (fract->z.r * fract->z.r + fract->z.i * fract->z.i < 4
 			&& fract->it < fract->it_max)
 	{
-		fract->tmp = fract->z.r;
-		fract->z.r = fract->z.r * fract->z.r - fract->z.i * fract->z.i +
-			fract->c.r;
-		fract->z.i = 2 * fract->z.i * fract->tmp + fract->c.i;
+		fract->tmp = fract->z.r * fract->z.r - fract->z.i * fract->z.i +
+		fract->c.r;
+		fract->z.i = -2 * fract->z.r * fract->z.i + fract->c.i;
+		fract->z.r = fract->tmp;
 		fract->it++;
 	}
 	if (fract->it == fract->it_max)
@@ -44,7 +44,7 @@ static void	mandelbrot_calc(t_fractol *fract)
 			(fract->color * fract->it));
 }
 
-static void	*mandelbrot(void *tab)
+static void	*tricorn(void *tab)
 {
 	t_fractol	*fract;
 	int			tmp;
@@ -57,7 +57,7 @@ static void	*mandelbrot(void *tab)
 		fract->y = tmp;
 		while (fract->y < fract->y_max)
 		{
-			mandelbrot_calc(fract);
+			tricorn_calc(fract);
 			fract->y++;
 		}
 		fract->x++;
@@ -65,7 +65,7 @@ static void	*mandelbrot(void *tab)
 	return (tab);
 }
 
-void		mandelbrot_threads(t_fractol *fract)
+void		tricorn_threads(t_fractol *fract)
 {
 	t_fractol	tab[THREADS];
 	pthread_t	t[THREADS];
@@ -77,7 +77,7 @@ void		mandelbrot_threads(t_fractol *fract)
 		ft_memcpy((void*)&tab[i], (void*)fract, sizeof(t_fractol));
 		tab[i].y = (WIN_WIDTH / THREADS) * i;
 		tab[i].y_max = (WIN_WIDTH / THREADS) * (i + 1);
-		pthread_create(&t[i], NULL, mandelbrot, &tab[i]);
+		pthread_create(&t[i], NULL, tricorn, &tab[i]);
 		i++;
 	}
 	while (i--)

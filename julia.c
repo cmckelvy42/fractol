@@ -5,37 +5,46 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cmckelvy <cmckelvy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/01 15:09:56 by cmckelvy          #+#    #+#             */
-/*   Updated: 2019/07/02 18:52:20 by cmckelvy         ###   ########.fr       */
+/*   Created: 2019/07/05 21:32:14 by cmckelvy          #+#    #+#             */
+/*   Updated: 2019/07/05 22:05:54 by cmckelvy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-int		mouse_julia(int x, int y, t_fractol *fract)
+int			mouse_julia(int x, int y, t_fractol *fract)
 {
+	if ((!(x % 5)) || (!(y % 5)))
+	{
+		if (fract->psychedelic[0] == 1)
+			fract->color = x * y;
+		else if (fract->psychedelic[0] == 2)
+			fract->color = (x * x) * (y * y);
+		else if (fract->psychedelic[0] == 3)
+			fract->color = ((x * x) * (y * y)) + (x + y) * (x + y);
+	}
 	if (fract->fract == 1 && fract->julia_mouse == 1)
 	{
 		fract->c.r = x * 2;
 		fract->c.i = y * 2 - 800;
-		fract_calc(fract);
 	}
+	fract_calc(fract);
 	return (0);
 }
 
-void	julia_init(t_fractol *fract)
+void		julia_init(t_fractol *fract)
 {
-    fract->it_max = 50;
-    fract->zoom = 200;
-    fract->x1 = -2.0f;
-    fract->y1 = -2.0f;
-    fract->color = 133742069;
-    fract->julia_mouse = 1;
-    fract->c.r = 0.285;
+	fract->it_max = 50;
+	fract->zoom = 200;
+	fract->x1 = -2.0f;
+	fract->y1 = -2.0f;
+	fract->color = 42424242;
+	fract->julia_mouse = 1;
+	fract->c.r = 0.285;
 	fract->c.i = 0.01;
 }
 
-void	julia_calc(t_fractol *fract)
+void		julia_calc(t_fractol *fract)
 {
 	fract->z.r = fract->x / fract->zoom + fract->x1;
 	fract->z.i = fract->y / fract->zoom + fract->y1;
@@ -52,7 +61,8 @@ void	julia_calc(t_fractol *fract)
 	if (fract->it == fract->it_max)
 		image_set_pixel(fract->mlx->image, fract->x, fract->y, 0x000000);
 	else
-		image_set_pixel(fract->mlx->image, fract->x, fract->y, (fract->color * fract->it));
+		image_set_pixel(fract->mlx->image, fract->x, fract->y,
+			(fract->color * fract->it));
 }
 
 static void	*julia(void *tab)
@@ -76,7 +86,7 @@ static void	*julia(void *tab)
 	return (tab);
 }
 
-void	julia_threads(t_fractol *fract)
+void		julia_threads(t_fractol *fract)
 {
 	t_fractol	tab[THREADS];
 	pthread_t	t[THREADS];
@@ -93,6 +103,7 @@ void	julia_threads(t_fractol *fract)
 	}
 	while (i--)
 		pthread_join(t[i], NULL);
-	mlx_put_image_to_window(fract->mlx->mlx, fract->mlx->window, 
+	mlx_put_image_to_window(fract->mlx->mlx, fract->mlx->window,
 		fract->mlx->image->image, 0, 0);
+	print_help(fract->mlx);
 }
