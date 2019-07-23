@@ -6,7 +6,7 @@
 /*   By: cmckelvy <cmckelvy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/05 21:32:07 by cmckelvy          #+#    #+#             */
-/*   Updated: 2019/07/05 22:29:03 by cmckelvy         ###   ########.fr       */
+/*   Updated: 2019/07/23 14:00:34 by cmckelvy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,6 @@ int		main(int argc, char **argv)
 		mlx_loop(mlx->mlx);
 	}
 	else
-		ft_putendl("Usage /fractol \"mandelbrot\", \"julia\", \"burningship\"");
+		ft_putendl("Usage /fractol \"mandelbrot\", \"julia\", \"burningship\", \"tricorn\"");
 	return (0);
 }
